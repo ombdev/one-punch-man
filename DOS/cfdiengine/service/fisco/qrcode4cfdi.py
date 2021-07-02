@@ -2,6 +2,18 @@ import tempfile
 import qrcode
 import random
 import string
+import base64
+
+
+def cert_base64_cfdi(cert_file):
+    """turns cert file into base 64"""
+    certb64 = None
+    with open(cert_file, 'rb') as f:
+        content = f.read()
+        certb64 = base64.b64encode(content).decode('ascii')
+
+    return certb64
+
 
 def qrcode_cfdi(as_usr, uuid, erfc, rrfc, total, chunk):
     """
