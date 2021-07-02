@@ -1,0 +1,7 @@
+lxml==3.7.1
+psycopg2==2.8.6
+PyXB==1.2.5
+qrcode==5.3
+reportlab==3.5.59
+Unidecode==0.4.19
+zeep==0.23.0
