@@ -1,5 +1,4 @@
 lxml==3.7.1
-psycopg2==2.8.6
 PyXB==1.2.5
 qrcode==5.3
 reportlab==3.5.59
