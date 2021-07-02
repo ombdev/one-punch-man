@@ -1,3 +1,4 @@
+import pyxb
 from decimal import Decimal
 from docmaker.gen import BuilderGen, CfdiType
 
