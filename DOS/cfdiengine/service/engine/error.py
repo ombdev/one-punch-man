@@ -17,5 +17,5 @@ class ErrorCode(enum.Enum):
 
     # values from 201 up to 255 are reserved
     # for answers of engine mechanism
-    MOD_BUSINESS_NOT_LOADED = 201
-    MOD_BUSINESS_UNEXPECTED_FAIL = 202
+    ACTION_NOT_MANEUVERED = 201
+    ACTION_UNEXPECTED_FAIL = 202
