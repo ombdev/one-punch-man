@@ -9,3 +9,7 @@ def builder(self, resdir, rdirs_conf, bid, f_outdoc **kwargs):
 
     if rdirs_conf == None:
         raise DocBuilderError("rdirs config info not fed!!")
+
+
+
+    return ErrorCode.SUCCESS
