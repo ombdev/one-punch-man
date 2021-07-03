@@ -30,7 +30,6 @@ def qrcode_cfdi(as_usr, uuid, erfc, rrfc, total, chunk):
     creates qrcode as per cfdi v33 constrains
     """
 
-
     def incept_file(i):
         fname = '{}/{}.jpg'.format(
             tempfile.gettempdir(),
