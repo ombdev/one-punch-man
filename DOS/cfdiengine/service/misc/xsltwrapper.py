@@ -1,4 +1,5 @@
 import os
+import subprocess
 from .localexec import LocalExec
 from distutils.spawn import find_executable
 
