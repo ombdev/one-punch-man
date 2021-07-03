@@ -26,7 +26,7 @@ def _dmcli(args):
             os.path.abspath(s_file)))
         if os.path.isfile(s_file):
             return profile_read(s_file)
-        raise Exception("unable to locate the config profile file")
+        raise FatalError("unable to locate the config profile file")
 
     RESOURCES_DIR = os.path.join(env_property('BASE_DIR'), 'resources')
 
@@ -49,11 +49,11 @@ def _dmcli(args):
     pt = read_settings(PROFILE_PATH)
 
     if not args.dm_output:
-        raise Exception("not defined output file")
+        raise FatalError("not defined output file")
 
     if args.dm_builder:
         if not args.dm_input:
-            raise Exception("not defined input variables")
+            raise FatalError("not defined input variables")
 
         kwargs = dict([])
         try:
@@ -66,15 +66,15 @@ def _dmcli(args):
                     (k , v) = opt.split('=')
                     kwargs[k] = v
         except ValueError:
-            raise Exception("input variables bad conformed")
+            raise FatalError("input variables bad conformed")
 
         try:
             builder(RESOURCES_DIR, pt['res']['dirs'],
                     args.dm_builder, args.dm_output, **kwargs)
         except:
-            raise Exception("problems in document builder")
+            raise FatalError("problems in document builder")
     else:
-        raise Exception("builder module not define")
+        raise FatalError("builder module not define")
 
 
 def _set_cmdargs_up():
