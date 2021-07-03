@@ -7,6 +7,7 @@ import base64
 import subprocess
 from distutils.spawn import find_executable
 from misc.localexec import LocalExec
+from .error import SignerError
 
 
 def cert_base64_cfdi(cert_file):
@@ -53,15 +54,6 @@ def qrcode_cfdi(as_usr, uuid, erfc, rrfc, total, chunk):
     )
     qr.make(fit=True)
     return incept_file(qr.make_image())
-
-
-class SignerError(Exception):
-    """Exception when signing cfdi went bad"""
-    def __init__(self, message=None):
-        self.message = message
-
-    def __str__(self):
-        return self.message
 
 
 def _sign_original_str(pem_privkey, str2sign):
