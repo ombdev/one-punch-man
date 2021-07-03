@@ -1,9 +1,11 @@
+import os
 import tempfile
 import qrcode
 import random
 import string
 import base64
 from distutils.spawn import find_executable
+from misc.localexec import LocalExec
 
 
 def cert_base64_cfdi(cert_file):
@@ -53,8 +55,29 @@ def qrcode_cfdi(as_usr, uuid, erfc, rrfc, total, chunk):
     return incept_file(qr.make_image())
 
 
+class SignerError(Exception):
+    """Exception when signing cfdi went bad"""
+    def __init__(self, message=None):
+        self.message = message
+
+    def __str__(self):
+        return self.message
+
+
 def sign_cfdi(pem_privkey, str2sign):
     """signs an string and returns base64 string"""
+
+    def __fetch_result(path):
+        rs = None
+        statinfo = os.stat(path)
+        if statinfo.st_size > 0:
+            rs = ''
+            with open(path, 'r') as rf:
+                for line in rf:
+                    rs = rs + line.replace("\n", "")
+        if rs is None:
+            SignerError("Unexpected ssl output!!!")
+        return rs
 
     def erase_bom(path):
         import codecs
@@ -107,7 +130,6 @@ def sign_cfdi(pem_privkey, str2sign):
     result_f = '{}/{}'.format(tmp_dir, _random_str())
 
     touch(input_f)
-
     with open(input_f, 'r+b') as cf:
         cf.write(str2sign.encode("utf-8-sig"))
 
@@ -129,3 +151,20 @@ def sign_cfdi(pem_privkey, str2sign):
         '-out',
         result_f
     ]
+
+    le = LocalExec()
+    try:
+        le([ssl_bin] + dgst_args, cmd_timeout=10, ign_rcs=None)
+        le([ssl_bin] + base64_args, cmd_timeout=10, ign_rcs=None)
+    except subprocess.CalledProcessError as e:
+        msg = "Command raised exception\nOutput: " + str(e.output)
+        raise SignerError(msg)
+
+    rs = fetch_result(result_f)
+
+    # It's time to eradicate the rubbish
+    os.remove(sealbin_f)
+    os.remove(input_f)
+    os.remove(result_f)
+
+    return rs
