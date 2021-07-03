@@ -1,5 +1,5 @@
 from misc.factory import Factory
-from docmaker.builders.xml import FacXml
+from docmaker.xml import FacXml
 
 class BuilderFactory(Factory):
     """
