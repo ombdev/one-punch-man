@@ -67,7 +67,7 @@ def _dmcli(args):
         raise Exception("builder module not define")
 
 
-def __set_cmdargs_up():
+def _set_cmdargs_up():
     """parses the cmd line arguments at the call"""
 
     psr_desc='Document maker command line control interface'
@@ -75,30 +75,15 @@ def __set_cmdargs_up():
 
     psr = argparse.ArgumentParser(description=psr_desc, epilog=psr_epi)
 
-    psr.add_argument(
-        '-d', '--debug', action='store_true',
-        dest='dm_debug', help='print debug information'
-    )
-
-    psr.add_argument(
-        '-c', '--config', action='store', default='basic'
-        dest='config', help='load an specific config profile'
-    )
-
-    psr.add_argument(
-        '-b', '--builder',
-        dest='dm_builder', help='specify the builder to use'
-    )
-
-    psr.add_argument(
-        '-i', '--input',
-        dest='dm_input', help='specify the input variables with \'var=val;var2=val2;var2=valN\'..'
-    )
-
-    psr.add_argument(
-        '-o', '--output',
-        dest='dm_output', help='specify the output file'
-    )
+    psr.add_argument('-d', '--debug', action='store_true',
+                     dest='dm_debug', help='print debug information')
+    psr.add_argument('-c', '--config', action='store', default='basic',
+                     dest='config', help='load an specific config profile')
+    psr.add_argument('-b', '--builder',
+                     dest='dm_builder', help='specify the builder to use')
+    psr.add_argument('-i', '--input', dest='dm_input',
+                     help='specify the input variables with \'var=val;var2=val2;var2=valN\'..')
+    psr.add_argument('-o', '--output', dest='dm_output', help='specify the output file')
 
     return psr.parse_args()
 
