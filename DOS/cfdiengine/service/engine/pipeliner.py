@@ -1,8 +1,18 @@
 import os
 import json
 import sys
+from docmaker.builder import builder
 from misc.tricks import dump_exception
 from engine.error import ErrorCode
+
+
+def _run_builder(pt, f_outdoc, resdir, dm_builder, **kwargs):
+    try:
+        builder(resdir, rdirs_conf=pt.res.dirs, dm_builder, f_outdoc, **kwargs)
+        return ErrorCode.SUCCESS
+    except:
+        logger.error(dump_exception())
+        return ErrorCode.DOCMAKER_ERROR
 
 
 class PipeLiner(object):
