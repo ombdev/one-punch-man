@@ -6,6 +6,7 @@ import os
 import sys
 from engine.error import FatalError
 from custom.profconf import profile_read
+from docmaker.builder import builder
 
 
 _logger = logging.getLogger(__name__)
