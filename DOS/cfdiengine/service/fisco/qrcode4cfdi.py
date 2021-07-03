@@ -15,25 +15,24 @@ def cert_base64_cfdi(cert_file):
 
     return certb64
 
+def _random_str(size=8):
+    """generates random string as per size"""
+    return ''.join(
+        random.SystemRandom().choice(
+            string.ascii_uppercase + string.digits
+        ) for _ in range(size)
+    )
 
 def qrcode_cfdi(as_usr, uuid, erfc, rrfc, total, chunk):
     """
     creates qrcode as per cfdi v33 constrains
     """
 
-    def random_str(size=8):
-        """generates random string as per size"""
-        return ''.join(
-            random.SystemRandom().choice(
-                string.ascii_uppercase + string.digits
-            ) for _ in range(size)
-        )
 
     def incept_file(i):
-        SIZE_RANDOM_STR = 8
         fname = '{}/{}.jpg'.format(
             tempfile.gettempdir(),
-            random_str(SIZE_RANDOM_STR)
+            _random_str()
         )
         with open(fname, 'wb') as q:
             i.save(q, 'JPEG')
@@ -103,11 +102,11 @@ def sign_cfdi(pem_pubkey, pem_privkey, str2sign):
     ssl_bin = seekout_openssl()
 
     tmp_dir = tempfile.gettempdir()
-    sealbin_f = '{}/{}'.format(tmp_dir, HelperStr.random_str(self.__SIZE_RANDOM_STR))
-    input_f = '{}/{}'.format(tmp_dir, HelperStr.random_str(self.__SIZE_RANDOM_STR))
-    result_f = '{}/{}'.format(tmp_dir, HelperStr.random_str(self.__SIZE_RANDOM_STR))
+    sealbin_f = '{}/{}'.format(tmp_dir, _random_str())
+    input_f = '{}/{}'.format(tmp_dir, _random_str())
+    result_f = '{}/{}'.format(tmp_dir, _random_str())
 
-    self.__touch(input_f)
+    touch(input_f)
 
     with open(input_f, 'r+b') as cf:
         cf.write(str2sign.encode("utf-8-sig"))
