@@ -1,7 +1,7 @@
 from docmaker.gen import BuilderGen
 from docmaker.error import DocBuilderImptError, DocBuilderStepError, DocBuilderError
 
-class DocPipeLine(object):
+class DocBuilder(object):
     """
     creator instance of documents.
     """
