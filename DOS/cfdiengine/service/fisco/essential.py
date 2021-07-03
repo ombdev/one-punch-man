@@ -64,7 +64,7 @@ class SignerError(Exception):
         return self.message
 
 
-def sign_original_str(pem_privkey, str2sign):
+def _sign_original_str(pem_privkey, str2sign):
     """signs an string and returns base64 string"""
 
     def fetch_result(path):
@@ -191,3 +191,19 @@ def _run_xslt(xml_filename, xsl_filename):
     except subprocess.CalledProcessError as e:
         msg = "Command raised exception\nOutput: " + str(e.output)
     raise Exception(msg)
+
+
+def sign_cfdi(file_pk, file_xslt, file_xml):
+    """
+    signs either cfdi xml
+    """
+    # it'll extract the original string as per xslt given
+    original = _run_xslt(file_xml, file_xslt)
+
+    with open(file_xml, 'r') as f:
+        try:
+            xml = f.read()
+            sign = _sign_original_str(file_pk, original)
+            return xml.replace('__DIGITAL_SIGN_HERE__', sign)
+        except cs.SignerError as e:
+            raise Exception(e)
