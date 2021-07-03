@@ -3,6 +3,7 @@ import qrcode
 import random
 import string
 import base64
+from distutils.spawn import find_executable
 
 
 def cert_base64_cfdi(cert_file):
@@ -51,3 +52,81 @@ def qrcode_cfdi(as_usr, uuid, erfc, rrfc, total, chunk):
     )
     qr.make(fit=True)
     return incept_file(qr.make_image())
+
+
+def sign_cfdi(pem_pubkey, pem_privkey, str2sign):
+    """signs an string and returns base64 string"""
+
+    def erase_bom(path):
+        import codecs
+
+        BUFSIZE = 4096
+        chunk = None
+
+        def takeout(l, f, c):
+            i = 0
+            c = c[l:]
+            while c:
+                f.seek(i)
+                f.write(c)
+                i += len(c)
+                f.seek(l, os.SEEK_CUR)
+                c = f.read(BUFSIZE)
+            f.seek(-l, os.SEEK_CUR)
+            f.truncate()
+
+        with open(path, "r+b") as p:
+            chunk = p.read(BUFSIZE)
+            if chunk.startswith(codecs.BOM_UTF8):
+                takeout(len(codecs.BOM_UTF8), p, chunk)
+            if chunk.startswith(codecs.BOM_UTF32_BE):
+                takeout(len(codecs.BOM_UTF32_BE), p, chunk)
+            if chunk.startswith(codecs.BOM_UTF32_LE):
+                takeout(len(codecs.BOM_UTF32_LE), p, chunk)
+            if chunk.startswith(codecs.BOM_UTF16_BE):
+                takeout(len(codecs.BOM_UTF16_BE), p, chunk)
+            if chunk.startswith(codecs.BOM_UTF16_LE):
+                takeout(len(codecs.BOM_UTF16_LE), p, chunk)
+
+    def seekout_openssl():
+        SSL_BIN = "openssl"
+        executable = find_executable(SSL_BIN)
+        if executable:
+            return os.path.abspath(executable)
+        raise SignerError("it has not found {} binary".format(SSL_BIN))
+
+    def touch(self, path):
+        with open(path, 'a'):
+            os.utime(path, None)
+
+    cipher = 'sha256'
+    ssl_bin = seekout_openssl()
+
+    tmp_dir = tempfile.gettempdir()
+    sealbin_f = '{}/{}'.format(tmp_dir, HelperStr.random_str(self.__SIZE_RANDOM_STR))
+    input_f = '{}/{}'.format(tmp_dir, HelperStr.random_str(self.__SIZE_RANDOM_STR))
+    result_f = '{}/{}'.format(tmp_dir, HelperStr.random_str(self.__SIZE_RANDOM_STR))
+
+    self.__touch(input_f)
+
+    with open(input_f, 'r+b') as cf:
+        cf.write(str2sign.encode("utf-8-sig"))
+
+    dgst_args = [
+         'dgst',
+         '-{}'.format(self.cipher),
+         '-sign',
+         self.pem_privkey,
+         '-out',
+         sealbin_f,
+         input_f
+    ]
+
+    base64_args = [
+        'base64',
+        '-in',
+        sealbin_f,
+        '-A',
+        '-out',
+        result_f
+    ]
