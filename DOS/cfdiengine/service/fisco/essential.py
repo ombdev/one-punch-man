@@ -63,7 +63,7 @@ class SignerError(Exception):
         return self.message
 
 
-def sign_cfdi(pem_privkey, str2sign):
+def sign_original_str(pem_privkey, str2sign):
     """signs an string and returns base64 string"""
 
     def fetch_result(path):
