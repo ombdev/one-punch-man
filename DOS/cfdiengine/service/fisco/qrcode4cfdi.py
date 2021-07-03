@@ -53,7 +53,7 @@ def qrcode_cfdi(as_usr, uuid, erfc, rrfc, total, chunk):
     return incept_file(qr.make_image())
 
 
-def sign_cfdi(pem_pubkey, pem_privkey, str2sign):
+def sign_cfdi(pem_privkey, str2sign):
     """signs an string and returns base64 string"""
 
     def erase_bom(path):
@@ -98,7 +98,7 @@ def sign_cfdi(pem_pubkey, pem_privkey, str2sign):
         with open(path, 'a'):
             os.utime(path, None)
 
-    cipher = 'sha256'
+    CIPHER = 'sha256'
     ssl_bin = seekout_openssl()
 
     tmp_dir = tempfile.gettempdir()
@@ -113,9 +113,9 @@ def sign_cfdi(pem_pubkey, pem_privkey, str2sign):
 
     dgst_args = [
          'dgst',
-         '-{}'.format(self.cipher),
+         '-{}'.format(CIPHER),
          '-sign',
-         self.pem_privkey,
+         pem_privkey,
          '-out',
          sealbin_f,
          input_f
