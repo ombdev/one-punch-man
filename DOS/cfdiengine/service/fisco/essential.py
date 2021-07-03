@@ -7,6 +7,7 @@ import base64
 import subprocess
 from distutils.spawn import find_executable
 from misc.localexec import LocalExec
+from misc.xsltwrapper import run_xslt
 from .error import SignerError
 
 
@@ -162,35 +163,12 @@ def _sign_original_str(pem_privkey, str2sign):
     return rs
 
 
-def _run_xslt(xml_filename, xsl_filename):
-    """
-    An xml wrapper to xslt proc
-    """
-    le = LocalExec(err_mute=True)
-
-    def seekout_xsltproc():
-        XSLTPROC_BIN = 'xsltproc'
-        executable = find_executable(XSLTPROC_BIN)
-        if executable:
-            return os.path.abspath(executable)
-        raise SignerError("it has not found {} binary".format(XSLTPROC_BIN))
-
-    exe = seekout_xsltproc()
-    exe_args = [ xsl_filename, xml_filename ]
-
-    try:
-        return le([exe] + exe_args, cmd_timeout=20, ign_rcs=None)
-    except subprocess.CalledProcessError as e:
-        msg = "Command raised exception\nOutput: " + str(e.output)
-    raise Exception(msg)
-
-
 def sign_cfdi(file_pk, file_xslt, file_xml):
     """
     signs either cfdi xml
     """
     # it'll extract the original string as per xslt given
-    original = _run_xslt(file_xml, file_xslt)
+    original = run_xslt(file_xml, file_xslt)
 
     with open(file_xml, 'r') as f:
         try:
