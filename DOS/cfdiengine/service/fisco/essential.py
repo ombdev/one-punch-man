@@ -67,7 +67,7 @@ class SignerError(Exception):
 def sign_cfdi(pem_privkey, str2sign):
     """signs an string and returns base64 string"""
 
-    def __fetch_result(path):
+    def fetch_result(path):
         rs = None
         statinfo = os.stat(path)
         if statinfo.st_size > 0:
