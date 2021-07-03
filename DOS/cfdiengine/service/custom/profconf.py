@@ -3,14 +3,12 @@ import yaml
 
 def profile_read(p_file_path):
     """
-    create a tree of dictioanaries as per
+    create a tree of dictionaries as per
     a profile determined
     """
 
     def parse_profile():
-        """
-        Parses a profile in json format
-        """
+        """Parses a profile in json format"""
 
         try:
             stream = open(p_file_path)
