@@ -1,4 +1,8 @@
 import yaml
+import logging
+
+
+_logger = logging.getLogger(__name__)
 
 
 def profile_read(p_file_path):

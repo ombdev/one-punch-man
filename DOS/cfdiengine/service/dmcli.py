@@ -2,6 +2,7 @@ import argparse
 import logging
 import os
 import sys
+from engine.error import FatalError
 from custom.profconf import profile_read
 
 
@@ -10,12 +11,18 @@ _logger = logging.getLogger(__name__)
 
 def _dmcli(args):
 
+    def env_property(prop):
+        """Read env variables for microservice's sake"""
+        val = os.environ.get(prop)
+        if val:
+            return val
+        raise FatalError("Enviroment variable {} has not been set !!".format(prop))
+
     def read_settings(s_file):
         _logger.debug("looking for config profile file in:\n{0}".format(
             os.path.abspath(s_file)))
         if os.path.isfile(s_file):
-            reader = profile_read(logger)
-            return reader(s_file)
+            return profile_read(s_file)
         raise Exception("unable to locate the config profile file")
 
     RESOURCES_DIR = os.path.join(env_property('BASE_DIR'), 'resources')
