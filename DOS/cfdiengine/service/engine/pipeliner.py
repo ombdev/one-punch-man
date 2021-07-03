@@ -4,7 +4,20 @@ import sys
 from misc.tricks import dump_exception
 from engine.error import ErrorCode
 
+
 class PipeLiner(object):
+
+    @staticmethod
+    def factura(pt, req):
+        pass
+
+    @staticmethod
+    def pago(pt, req):
+        pass
+
+    @staticmethod
+    def nota_cred(pt, req):
+        pass
 
     @classmethod
     def maneuver_req(cls, pt, req, adapter=None):
@@ -18,18 +31,17 @@ class PipeLiner(object):
 
         d = apply_adapter()
         try:
-            action = d['req']['action']
-            args = d['req']['args']
+            motive = d['req']['motive']
+            content = d['req']['content']
 
-            if not hasattr(cls, action):
-                msg = "module {0} has no handler {1}".format(business_mod, action)
+            if not hasattr(cls, motive):
+                msg = "The {0} has no motive {1}".format(cls.__name__, motive)
                 raise RuntimeError(msg)
 
-            handler = getattr(cls, action)
-            return handler(logger, pt, args)
+            return getattr(cls, motive)(pt, content)
         except (RuntimeError) as e:
             _logger.fatal("support module failure {}".format(e))
-            return ErrorCode.ACTION_NOT_MANEUVERED.value
+            return ErrorCode.MOTIVE_NOT_MANEUVERED.value
         except:
             _logger.error(dump_exception())
-            return ErrorCode.ACTION_UNEXPECTED_FAIL.value
+            return ErrorCode.MOTIVE_UNEXPECTED_FAIL.value

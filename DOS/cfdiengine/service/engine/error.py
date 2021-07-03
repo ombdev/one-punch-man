@@ -17,5 +17,5 @@ class ErrorCode(enum.Enum):
 
     # values from 201 up to 255 are reserved
     # for answers of engine mechanism
-    ACTION_NOT_MANEUVERED = 201
-    ACTION_UNEXPECTED_FAIL = 202
+    MOTIVE_NOT_MANEUVERED = 201
+    MOTIVE_UNEXPECTED_FAIL = 202
