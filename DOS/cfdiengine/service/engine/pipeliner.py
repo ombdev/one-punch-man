@@ -6,19 +6,45 @@ from misc.tricks import dump_exception
 from engine.error import ErrorCode
 
 
-def _run_builder(pt, f_outdoc, resdir, dm_builder, **kwargs):
-    try:
-        return builder(resdir, rdirs_conf=pt.res.dirs, dm_builder, f_outdoc, **kwargs)
-    except:
-        logger.error(dump_exception())
-        return ErrorCode.DOCMAKER_ERROR
+def _empty_tmp_file():
+   
+    def _random_str(size=8):
+        """generates random string as per size"""
+
+        import random
+        import string
+
+        return ''.join(
+            random.SystemRandom().choice(
+                string.ascii_uppercase + string.digits
+            ) for _ in range(size)
+        )
+
+    tmp_dir = tempfile.gettempdir()
+    return  os.path.join(tmp_dir, _random_str())
 
 
 class PipeLiner(object):
 
-    @staticmethod
-    def factura(pt, req):
-        pass
+    @classmethod
+    def facturar(cls, pt, req):
+
+        resdir = os.path.abspath(os.path.join(os.path.dirname(pt["source"]), os.pardir))
+        tmp_file = _empty_tmp_file()
+
+        rc = builder(
+                resdir,
+                pt["res"]["dirs"], 'facxml', tmp_file, **kwargs)
+
+        filename = req['content']['filename']
+        if rc == ErrorCode.SUCCESS:
+            out_dir = os.path.join(rdirs['cfdi_output'], inceptor_data['rfc'])
+            rc, outfile = cls._pac_sign(tmp_file, filename, out_dir, pt["tparty"]["pac"])
+            
+        if os.path.isfile(tmp_file):
+            os.remove(tmp_file)
+
+        return rc.value
 
     @staticmethod
     def pago(pt, req):
@@ -26,6 +52,11 @@ class PipeLiner(object):
 
     @staticmethod
     def nota_cred(pt, req):
+        pass
+
+    @staticmethod
+    def _pac_sign(f_xmlin, xid, out_dir, pac_conf):
+        """Signs xml with pac connector mechanism"""
         pass
 
     @classmethod
