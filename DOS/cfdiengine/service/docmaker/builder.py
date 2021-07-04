@@ -10,6 +10,10 @@ def builder(self, resdir, rdirs_conf, bid, f_outdoc, **kwargs):
     if rdirs_conf == None:
         raise DocBuilderError("rdirs config info not fed!!")
 
+    try:
+        # here the document creation phases
 
-
-    return ErrorCode.SUCCESS
+        return ErrorCode.SUCCESS
+    except:
+        logger.error(dump_exception())
+        return ErrorCode.DOCMAKER_ERROR
