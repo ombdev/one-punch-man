@@ -1,6 +1,6 @@
 language: python
 python:
-  - "3.9"
+  - "3.6"
 before_install:
   - sudo apt-get install -y xsltproc
   - export PYTHONPATH=.:./DOS/cfdiengine/service
