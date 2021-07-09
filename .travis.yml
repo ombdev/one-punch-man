@@ -1,0 +1,13 @@
+language: python
+python:
+  - "3.9"
+before_install:
+  - sudo apt-get install -y xsltproc
+  - export PYTHONPATH=.:./DOS/cfdiengine/service
+  - pwd
+# command to install dependencies
+install:
+  - pip install -r requirements.txt
+# command to run tests
+script:
+  - pytest
